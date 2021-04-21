@@ -17,19 +17,24 @@ st.write("""
 	""")
 
 st.sidebar.title("Select Stock")
-select = st.sidebar.selectbox('Select stocks', ['DLF.NS','SBIN.NS','ITC.NS'], key='1')
+stocksymbol = st.sidebar.text_input('Write stock symbol: ','SBIN').upper()
+stocksymbol = stocksymbol+'.NS'
+# select = st.sidebar.selectbox('Select stocks', ['DLF.NS','SBIN.NS','ITC.NS'], key='1')
 timeframe = st.sidebar.selectbox('Timeframe',['60m', '5m', '15m', '30m', '90m','1d', '5d', '1wk', '1mo'])
+period = st.sidebar.slider('select no of days',1,60,5)
+period = str(period) + 'd'
 
 
+# print(stocksymbol)
 
-tickerSymbol = select
+tickerSymbol = stocksymbol
 # print(tickerSymbol)
 
 
 tickerData = yf.Ticker(tickerSymbol)
 
 
-tickerDf = tickerData.history(period = '15d',interval = timeframe)
+tickerDf = tickerData.history(period = period,interval = timeframe)
 tickerDf.reset_index(level=0, inplace=True)
 
 tickerDf.columns = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dividends',
@@ -54,7 +59,7 @@ data = [set1]
 
 fig = go.Figure(data=data)
 # fig.layout = dict(title=select, xaxis = dict(type="category"))
-fig.update_layout(xaxis_rangeslider_visible=False,title= select,height = 600, width = 900,autosize = False)
+fig.update_layout(xaxis_rangeslider_visible=False,title= stocksymbol,height = 600, width = 900,autosize = False)
 # fig.update_xaxes(rangebreaks=[dict(values=dt_breaks)]) # hide dates with no values
 
 fig.update_xaxes(
@@ -66,7 +71,7 @@ fig.update_xaxes(
         ]
     )
 
-print(tickerData.financials)
+# print(tickerData.financials)
 st.plotly_chart(fig,use_container_width=False)
 
 st.write(tickerDf.tail(20))
