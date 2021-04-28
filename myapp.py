@@ -74,4 +74,4 @@ fig.update_xaxes(
 # print(tickerData.financials)
 st.plotly_chart(fig,use_container_width=False)
 
-st.write(tickerDf.tail(20))
+st.write(tickerDf.tail(5))
